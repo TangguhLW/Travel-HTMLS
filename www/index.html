@@ -1,0 +1,3882 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Banten Travel - Booking Wisata Banten</title>
+    <style>
+        /* ========== RESET & BASE STYLES ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0194f3;
+            --primary-dark: #0077cc;
+            --primary-light: #e8f5fd;
+            --secondary: #ff5e1f;
+            --success: #00c48c;
+            --danger: #ff5e5e;
+            --warning: #ffb700;
+            --bg-light: #f5f7fa;
+            --bg-white: #ffffff;
+            --text-dark: #1a1a1a;
+            --text-gray: #687176;
+            --border: #e4e9f0;
+            --shadow: rgba(1, 148, 243, 0.15);
+            --shadow-hover: rgba(1, 148, 243, 0.25);
+            --radius: 16px;
+            --radius-sm: 12px;
+            --radius-lg: 20px;
+        }
+
+        [data-theme="dark"] {
+            --primary: #0194f3;
+            --primary-dark: #0077cc;
+            --primary-light: #1a3a52;
+            --secondary: #ff5e1f;
+            --success: #00c48c;
+            --bg-light: #0f1419;
+            --bg-white: #1a1f26;
+            --text-dark: #f1f5f9;
+            --text-gray: #94a3b8;
+            --border: #2d3748;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --shadow-hover: rgba(1, 148, 243, 0.3);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            padding-bottom: 80px;
+            transition: background 0.3s ease;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        /* ========== SVG ICONS ========== */
+        .icon {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .icon-sm {
+            width: 20px;
+            height: 20px;
+        }
+
+        .icon-lg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .icon-xl {
+            width: 48px;
+            height: 48px;
+        }
+
+        /* ========== PARALLAX & ANIMATIONS ========== */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .parallax-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
+        .animate-in {
+            animation: slideInUp 0.6s ease-out forwards;
+        }
+
+        .hover-lift {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px var(--shadow);
+        }
+
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+
+        .hover-glow {
+            transition: all 0.3s ease;
+        }
+
+        .hover-glow:hover {
+            box-shadow: 0 0 20px var(--shadow-hover);
+        }
+
+        /* ========== LOADING & SKELETON ========== */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .loading-subtext {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-top: 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, var(--border) 25%, var(--bg-light) 50%, var(--border) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: var(--radius-sm);
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            background: var(--bg-white);
+            padding: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px var(--shadow);
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-light);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background: var(--primary);
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 4px 12px var(--shadow-hover);
+        }
+
+        .icon-btn:hover svg {
+            fill: white;
+            stroke: white;
+        }
+
+        .icon-btn:active {
+            transform: scale(0.95);
+        }
+
+        .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        /* ========== SEARCH BAR ========== */
+        .search-section {
+            margin: 20px 0;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 48px 14px 48px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 15px;
+            background: var(--bg-white);
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-gray);
+        }
+
+        .filter-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        /* ========== CARDS ========== */
+        .card {
+            background: var(--bg-white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: 0 2px 8px var(--shadow);
+            margin-bottom: 16px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(1, 148, 243, 0.08), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px var(--shadow-hover);
+        }
+
+        .card:active {
+            transform: translateY(-4px) scale(0.98);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            position: relative;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover .card-image {
+            transform: scale(1.1);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .wishlist-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2;
+        }
+
+        .wishlist-btn:hover {
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(255, 94, 94, 0.3);
+        }
+
+        .wishlist-btn.active {
+            background: rgba(255, 94, 94, 0.1);
+        }
+
+        .wishlist-btn.active:hover {
+            background: rgba(255, 94, 94, 0.2);
+        }
+
+        .wishlist-btn svg {
+            width: 20px;
+            height: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-btn:active {
+            transform: scale(0.9);
+        }
+
+        .card-content {
+            padding: 16px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .card-location {
+            color: var(--text-gray);
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .card-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .stars {
+            color: var(--warning);
+            display: flex;
+            gap: 2px;
+        }
+
+        .rating-text {
+            font-size: 14px;
+            color: var(--text-gray);
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .price {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .price-label {
+            font-size: 12px;
+            color: var(--text-gray);
+            display: block;
+        }
+
+        /* ========== BUTTONS ========== */
+        .btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        /* ========== BOTTOM NAV ========== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-white);
+            padding: 12px 0;
+            box-shadow: 0 -2px 8px var(--shadow);
+            z-index: 100;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .nav-icon {
+            font-size: 24px;
+        }
+
+        /* ========== MODAL ========== */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: var(--bg-white);
+            z-index: 10;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-light);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        /* ========== FORM ========== */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            background: var(--bg-white);
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+
+        /* ========== NOTIFICATION ========== */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-white);
+            padding: 16px 20px;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 12px var(--shadow);
+            display: none;
+            align-items: center;
+            gap: 12px;
+            z-index: 2000;
+            animation: slideInRight 0.3s ease;
+            max-width: 320px;
+        }
+
+        .notification.show {
+            display: flex;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(400px); }
+            to { transform: translateX(0); }
+        }
+
+        .notification.success { border-left: 4px solid var(--secondary); }
+        .notification.error { border-left: 4px solid var(--danger); }
+        .notification.warning { border-left: 4px solid var(--warning); }
+
+        /* ========== TABS ========== */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-white);
+            color: var(--text-gray);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* ========== UTILITY CLASSES ========== */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .mt-20 { margin-top: 20px; }
+        .mb-20 { margin-bottom: 20px; }
+        .flex { display: flex; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .gap-8 { gap: 8px; }
+        .gap-12 { gap: 12px; }
+
+        /* ========== PROMO BANNER ========== */
+        .promo-banner {
+            background: linear-gradient(135deg, var(--secondary), #ff8c42);
+            padding: 16px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(255, 94, 31, 0.3);
+        }
+
+        .promo-banner:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(255, 94, 31, 0.4);
+        }
+
+        .promo-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .promo-content h3 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .promo-content p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        /* ========== STATS CARDS ========== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--bg-white);
+            padding: 16px;
+            border-radius: var(--radius);
+            box-shadow: 0 2px 8px var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px var(--shadow-hover);
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+
+        /* ========== QUICK ACTIONS ========== */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .quick-action {
+            background: var(--bg-white);
+            padding: 16px 8px;
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .quick-action:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px var(--shadow-hover);
+        }
+
+        .quick-action-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+        }
+
+        .quick-action-label {
+            font-size: 11px;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        /* ========== FLOATING ACTION BUTTON ========== */
+        .fab {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px var(--shadow-hover);
+            cursor: pointer;
+            z-index: 99;
+            transition: all 0.3s ease;
+        }
+
+        .fab:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 8px 20px var(--shadow-hover);
+        }
+
+        .fab svg {
+            fill: white;
+            stroke: white;
+        }
+
+        /* ========== COMPARISON FEATURE ========== */
+        .compare-bar {
+            position: fixed;
+            bottom: 80px;
+            left: 0;
+            right: 0;
+            background: var(--bg-white);
+            padding: 12px 16px;
+            box-shadow: 0 -2px 12px var(--shadow);
+            z-index: 98;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .compare-bar.active {
+            transform: translateY(0);
+        }
+
+        .compare-items {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            margin-bottom: 8px;
+        }
+
+        .compare-item {
+            background: var(--bg-light);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .compare-item button {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            padding: 0;
+            font-size: 16px;
+        }
+
+        /* ========== PROMO BANNER ========== */
+        .promo-banner {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 20px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .promo-banner:hover {
+            transform: scale(1.02);
+        }
+
+        .promo-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .promo-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .promo-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .promo-desc {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* ========== STATS CARDS ========== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--bg-white);
+            padding: 16px;
+            border-radius: var(--radius);
+            box-shadow: 0 2px 8px var(--shadow);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px var(--shadow-hover);
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 12px;
+            padding: 10px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+
+        /* ========== QUICK ACTIONS ========== */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .quick-action {
+            background: var(--bg-white);
+            padding: 16px 8px;
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .quick-action:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px var(--shadow-hover);
+        }
+
+        .quick-action-icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 8px;
+            padding: 8px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quick-action-label {
+            font-size: 11px;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        /* ========== FLOATING ACTION BUTTON ========== */
+        .fab {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background: var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(255, 94, 31, 0.4);
+            cursor: pointer;
+            z-index: 999;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 94, 31, 0.6);
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 4px 12px rgba(255, 94, 31, 0.4); }
+            50% { box-shadow: 0 4px 20px rgba(255, 94, 31, 0.7); }
+        }
+
+        /* ========== TRENDING BADGE ========== */
+        .trending-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--secondary);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            z-index: 2;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* ========== PRICE COMPARISON ========== */
+        .price-compare {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            color: var(--text-gray);
+            font-size: 14px;
+        }
+
+        .discount-badge {
+            background: var(--danger);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        /* ========== CATEGORY ICONS ========== */
+        .category-icon-wrapper {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (min-width: 481px) {
+            .container {
+                padding: 24px;
+            }
+        }
+
+        /* ========== SECTION STYLES ========== */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-dark);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-gray);
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* ========== DETAIL PAGE ========== */
+        .detail-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+        }
+
+        .detail-content {
+            padding: 20px;
+        }
+
+        .detail-header {
+            margin-bottom: 20px;
+        }
+
+        .detail-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            color: var(--text-gray);
+        }
+
+        .description {
+            line-height: 1.6;
+            color: var(--text-gray);
+            margin-bottom: 20px;
+        }
+
+        .facilities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .facility-tag {
+            padding: 8px 16px;
+            background: var(--bg-light);
+            border-radius: 20px;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .reviews-section {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .review-card {
+            background: var(--bg-light);
+            padding: 16px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 12px;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+        }
+
+        .review-date {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+
+        /* ========== BOOKING FORM ========== */
+        .booking-summary {
+            background: var(--bg-light);
+            padding: 16px;
+            border-radius: var(--radius);
+            margin-top: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        .summary-row.total {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            padding-top: 12px;
+            border-top: 2px solid var(--border);
+        }
+
+        /* ========== CART ========== */
+        .cart-item {
+            background: var(--bg-white);
+            padding: 16px;
+            border-radius: var(--radius);
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .cart-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .remove-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* ========== PROFILE ========== */
+        .profile-header {
+            text-align: center;
+            padding: 32px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: var(--radius-lg);
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 36px;
+            color: var(--primary);
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .profile-email {
+            opacity: 0.9;
+        }
+
+        .menu-list {
+            background: var(--bg-white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .menu-item {
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-item:active {
+            background: var(--bg-light);
+        }
+
+        .menu-item-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* ========== VOUCHER ========== */
+        .voucher-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: var(--radius);
+            color: white;
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .voucher-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        }
+
+        .voucher-code {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+
+        .voucher-desc {
+            opacity: 0.9;
+            margin-bottom: 12px;
+        }
+
+        .voucher-expiry {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* ========== PAYMENT ========== */
+        .payment-method {
+            background: var(--bg-white);
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .payment-method.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .payment-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-light);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        /* ========== ABOUT PAGE ========== */
+        .about-hero {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 40px 20px;
+            border-radius: var(--radius-lg);
+            color: white;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .about-hero h1 {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .about-section {
+            background: var(--bg-white);
+            padding: 24px;
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .about-section h2 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: var(--primary);
+        }
+
+        .about-section p {
+            line-height: 1.6;
+            color: var(--text-gray);
+            margin-bottom: 12px;
+        }
+
+        .creators {
+            display: flex;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .creator-card {
+            flex: 1;
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: var(--radius);
+            text-align: center;
+        }
+
+        .creator-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 24px;
+            color: white;
+            font-weight: 700;
+        }
+
+        .creator-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .creator-role {
+            font-size: 14px;
+            color: var(--text-gray);
+        }
+    </style>
+</head>
+<body>
+    <!-- Parallax Background -->
+    <div class="parallax-bg" id="parallaxBg">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <circle cx="20" cy="20" r="1" fill="currentColor"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)"/>
+        </svg>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <svg class="loading-logo" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+        </svg>
+        <div class="loading-text">Banten Travel</div>
+        <div class="loading-subtext">Memuat destinasi wisata...</div>
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <span id="notificationText"></span>
+    </div>
+
+    <!-- Header -->
+    <div class="header" id="mainHeader">
+        <div class="header-content">
+            <div class="logo">
+                <svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                Banten Travel
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+                    <svg class="icon" id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                </button>
+                <button class="icon-btn" onclick="showNotifications()" title="Notifikasi">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    <span class="badge" id="notifBadge" style="display: none;">0</span>
+                </button>
+                <button class="icon-btn" onclick="navigateTo('cart')" title="Keranjang">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"/>
+                        <circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    <span class="badge" id="cartBadge" style="display: none;">0</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        
+        <!-- HOME SECTION -->
+        <section id="homeSection" class="section active">
+            <div class="search-section">
+                <div class="search-bar">
+                    <svg class="search-icon icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Cari destinasi wisata...">
+                    <button class="filter-btn hover-scale" onclick="showFilterModal()">
+                        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                        </svg>
+                        Filter
+                    </button>
+                </div>
+            </div>
+
+            <div class="tabs" id="categoryTabs">
+                <div class="tab active hover-scale" onclick="filterByCategory('all')">
+                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="2" y1="12" x2="22" y2="12"/>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                    </svg>
+                    Semua
+                </div>
+                <div class="tab hover-scale" onclick="filterByCategory('pantai')">
+                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                        <path d="M12 2v20M2 12h20M12 2C8 6 8 10 12 12c4-2 4-6 0-10zM12 12c-4 2-4 6 0 10 4-4 4-8 0-10z"/>
+                    </svg>
+                    Pantai
+                </div>
+                <div class="tab hover-scale" onclick="filterByCategory('taman')">
+                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                        <path d="M12 2v20M8 6c-3 0-5 2-5 5s2 5 5 5h8c3 0 5-2 5-5s-2-5-5-5"/>
+                    </svg>
+                    Taman
+                </div>
+                <div class="tab hover-scale" onclick="filterByCategory('budaya')">
+                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                        <path d="M4 6h16M4 12h16M4 18h16"/>
+                        <path d="M6 2v4M18 2v4M6 18v4M18 18v4"/>
+                    </svg>
+                    Budaya
+                </div>
+                <div class="tab hover-scale" onclick="filterByCategory('kuliner')">
+                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                        <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3z"/>
+                    </svg>
+                    Kuliner
+                </div>
+            </div>
+
+            <!-- Promo Banner -->
+            <div class="promo-banner hover-scale" onclick="showVouchers()">
+                <div class="promo-icon">
+                    <svg class="icon" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
+                </div>
+                <div class="promo-content">
+                    <h3>Promo Spesial!</h3>
+                    <p>Diskon hingga Rp 50.000 untuk booking hari ini</p>
+                </div>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <div class="quick-action hover-scale" onclick="filterByCategory('pantai')">
+                    <div class="quick-action-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+                            <path d="M12 2v20M2 12h20M12 2C8 6 8 10 12 12c4-2 4-6 0-10zM12 12c-4 2-4 6 0 10 4-4 4-8 0-10z"/>
+                        </svg>
+                    </div>
+                    <div class="quick-action-label">Pantai</div>
+                </div>
+                <div class="quick-action hover-scale" onclick="filterByCategory('taman')">
+                    <div class="quick-action-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2">
+                            <path d="M12 2v20M8 6c-3 0-5 2-5 5s2 5 5 5h8c3 0 5-2 5-5s-2-5-5-5"/>
+                        </svg>
+                    </div>
+                    <div class="quick-action-label">Taman</div>
+                </div>
+                <div class="quick-action hover-scale" onclick="filterByCategory('budaya')">
+                    <div class="quick-action-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="var(--secondary)" stroke-width="2">
+                            <path d="M4 6h16M4 12h16M4 18h16"/>
+                            <path d="M6 2v4M18 2v4M6 18v4M18 18v4"/>
+                        </svg>
+                    </div>
+                    <div class="quick-action-label">Budaya</div>
+                </div>
+                <div class="quick-action hover-scale" onclick="filterByCategory('kuliner')">
+                    <div class="quick-action-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3z"/>
+                        </svg>
+                    </div>
+                    <div class="quick-action-label">Kuliner</div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Destinasi Populer</h2>
+            <div id="destinationList"></div>
+            
+            <div id="loadMoreContainer" style="text-align: center; margin: 20px 0;">
+                <button class="btn btn-outline hover-glow" onclick="loadMoreDestinations()">Muat Lebih Banyak</button>
+            </div>
+        </section>
+
+        <!-- DETAIL SECTION -->
+        <section id="detailSection" class="section">
+            <div id="detailContent"></div>
+        </section>
+
+        <!-- WISHLIST SECTION -->
+        <section id="wishlistSection" class="section">
+            <h2 class="section-title">Wishlist Saya</h2>
+            <div id="wishlistList"></div>
+        </section>
+
+        <!-- CART SECTION -->
+        <section id="cartSection" class="section">
+            <h2 class="section-title">Keranjang</h2>
+            <div id="cartList"></div>
+            <div id="cartSummary"></div>
+        </section>
+
+        <!-- HISTORY SECTION -->
+        <section id="historySection" class="section">
+            <h2 class="section-title">Riwayat Transaksi</h2>
+            <div id="historyList"></div>
+        </section>
+
+        <!-- PROFILE SECTION -->
+        <section id="profileSection" class="section">
+            <div id="profileContent"></div>
+        </section>
+
+        <!-- ABOUT SECTION -->
+        <section id="aboutSection" class="section">
+            <div class="about-hero">
+                <h1>🏖️ Banten Travel</h1>
+                <p>Platform Booking Wisata Terbaik di Banten</p>
+            </div>
+
+            <div class="about-section">
+                <h2>Tentang Aplikasi</h2>
+                <p>Banten Travel adalah aplikasi web booking tiket wisata yang dirancang khusus untuk memudahkan wisatawan dalam menjelajahi keindahan destinasi wisata di Provinsi Banten, Indonesia.</p>
+                <p>Aplikasi ini menyediakan berbagai fitur lengkap seperti pencarian destinasi, booking tiket, sistem pembayaran, wishlist, review, dan masih banyak lagi - semuanya dalam satu platform yang mudah digunakan.</p>
+            </div>
+
+            <div class="about-section">
+                <h2>Fitur Unggulan</h2>
+                <p>✨ Desain modern dan responsif khusus mobile</p>
+                <p>🔍 Pencarian dan filter destinasi yang canggih</p>
+                <p>💳 Sistem booking dan pembayaran yang mudah</p>
+                <p>⭐ Rating dan review dari pengguna</p>
+                <p>🎫 Voucher diskon menarik</p>
+                <p>🌙 Mode gelap untuk kenyamanan mata</p>
+                <p>📱 Single Page Application tanpa reload</p>
+            </div>
+
+            <div class="about-section">
+                <h2>Tim Pengembang</h2>
+                <p>Aplikasi ini dikembangkan oleh tim developer berbakat yang berdedikasi untuk memberikan pengalaman terbaik dalam booking wisata digital.</p>
+                
+                <div class="creators">
+                    <div class="creator-card">
+                        <div class="creator-avatar">T</div>
+                        <div class="creator-name">Tangguh</div>
+                        <div class="creator-role">Lead Developer</div>
+                    </div>
+                    <div class="creator-card">
+                        <div class="creator-avatar">F</div>
+                        <div class="creator-name">Farel</div>
+                        <div class="creator-role">Co-Developer</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-section">
+                <h2>Teknologi</h2>
+                <p>Dibangun menggunakan teknologi web modern:</p>
+                <p>• HTML5, CSS3, JavaScript (Vanilla)</p>
+                <p>• LocalStorage untuk penyimpanan data</p>
+                <p>• Single Page Application (SPA)</p>
+                <p>• Mobile-First Responsive Design</p>
+                <p>• Progressive Web App Ready</p>
+            </div>
+
+            <div class="about-section">
+                <h2>Kontak & Dukungan</h2>
+                <p>📧 Email: support@bantentravel.com</p>
+                <p>📱 WhatsApp: +62 857-7008-3331</p>
+                <p>🌐 Website: https://bantentravel.ct.ws</p>
+                <p style="margin-top: 20px; text-align: center; color: var(--text-gray); font-size: 14px;">
+                    © 2026 Banten Travel. Dibuat oleh Tangguh & Farel
+                </p>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-container">
+            <a href="#" class="nav-item active" onclick="navigateTo('home'); return false;">
+                <svg class="nav-icon icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-item" onclick="navigateTo('wishlist'); return false;">
+                <svg class="nav-icon icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+                <span>Wishlist</span>
+            </a>
+            <a href="#" class="nav-item" onclick="navigateTo('history'); return false;">
+                <svg class="nav-icon icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10 9 9 9 8 9"/>
+                </svg>
+                <span>Riwayat</span>
+            </a>
+            <a href="#" class="nav-item" onclick="navigateTo('profile'); return false;">
+                <svg class="nav-icon icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>Profil</span>
+            </a>
+            <a href="#" class="nav-item" onclick="navigateTo('about'); return false;">
+                <svg class="nav-icon icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                </svg>
+                <span>Tentang</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Floating Action Button -->
+    <div class="fab" id="fabButton" onclick="scrollToTop()" style="display: none;">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <line x1="12" y1="19" x2="12" y2="5"/>
+            <polyline points="5 12 12 5 19 12"/>
+        </svg>
+    </div>
+
+    <!-- Compare Bar -->
+    <div class="compare-bar" id="compareBar">
+        <div class="compare-items" id="compareItems"></div>
+        <button class="btn btn-primary btn-block hover-scale" onclick="showComparison()">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M9 11l3 3L22 4"/>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+            Bandingkan (<span id="compareCount">0</span>)
+        </button>
+    </div>
+
+    <!-- MODALS -->
+    
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Masuk</h3>
+                <button class="close-btn" onclick="closeModal('loginModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="loginEmail" required placeholder="email@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="loginPassword" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Masuk</button>
+                    <p style="text-align: center; margin-top: 16px; color: var(--text-gray);">
+                        Belum punya akun? <a href="#" onclick="showRegisterModal(); return false;" style="color: var(--primary); font-weight: 600;">Daftar</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Daftar</h3>
+                <button class="close-btn" onclick="closeModal('registerModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label class="form-label">Nama Lengkap</label>
+                        <input type="text" class="form-input" id="registerName" required placeholder="Nama Anda">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="registerEmail" required placeholder="email@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="registerPassword" required placeholder="••••••••">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Konfirmasi Password</label>
+                        <input type="password" class="form-input" id="registerConfirmPassword" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Daftar</button>
+                    <p style="text-align: center; margin-top: 16px; color: var(--text-gray);">
+                        Sudah punya akun? <a href="#" onclick="showLoginModal(); return false;" style="color: var(--primary); font-weight: 600;">Masuk</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Modal -->
+    <div class="modal" id="filterModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Filter Destinasi</h3>
+                <button class="close-btn" onclick="closeModal('filterModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Rentang Harga</label>
+                    <select class="form-input" id="filterPrice">
+                        <option value="all">Semua Harga</option>
+                        <option value="0-100000">< Rp 100.000</option>
+                        <option value="100000-300000">Rp 100.000 - 300.000</option>
+                        <option value="300000-500000">Rp 300.000 - 500.000</option>
+                        <option value="500000-999999">> Rp 500.000</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Rating Minimum</label>
+                    <select class="form-input" id="filterRating">
+                        <option value="0">Semua Rating</option>
+                        <option value="4">⭐ 4.0+</option>
+                        <option value="4.5">⭐ 4.5+</option>
+                        <option value="4.8">⭐ 4.8+</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Lokasi</label>
+                    <select class="form-input" id="filterLocation">
+                        <option value="all">Semua Lokasi</option>
+                        <option value="Anyer">Anyer</option>
+                        <option value="Carita">Carita</option>
+                        <option value="Tanjung Lesung">Tanjung Lesung</option>
+                        <option value="Ujung Kulon">Ujung Kulon</option>
+                        <option value="Serang">Serang</option>
+                        <option value="Pandeglang">Pandeglang</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary btn-block" onclick="applyFilter()">Terapkan Filter</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div class="modal" id="bookingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Booking Tiket</h3>
+                <button class="close-btn" onclick="closeModal('bookingModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="handleBooking(event)">
+                    <div class="form-group">
+                        <label class="form-label">Tanggal Kunjungan</label>
+                        <input type="date" class="form-input" id="bookingDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Jumlah Tiket</label>
+                        <input type="number" class="form-input" id="bookingTickets" min="1" max="10" value="1" required onchange="updateBookingTotal()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Kode Voucher (Opsional)</label>
+                        <input type="text" class="form-input" id="bookingVoucher" placeholder="Masukkan kode voucher">
+                        <button type="button" class="btn btn-outline" style="margin-top: 8px; width: 100%;" onclick="applyVoucher()">Gunakan Voucher</button>
+                    </div>
+                    <div class="booking-summary">
+                        <div class="summary-row">
+                            <span>Harga per Tiket</span>
+                            <span id="bookingPricePerTicket">Rp 0</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Jumlah Tiket</span>
+                            <span id="bookingTicketCount">1</span>
+                        </div>
+                        <div class="summary-row" id="discountRow" style="display: none; color: var(--success);">
+                            <span>Diskon</span>
+                            <span id="bookingDiscount">- Rp 0</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span id="bookingTotal">Rp 0</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block hover-scale" style="margin-top: 20px;">
+                        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                        Lanjut ke Pembayaran
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Pilih Metode Pembayaran</h3>
+                <button class="close-btn" onclick="closeModal('paymentModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <h4 style="margin-bottom: 16px; color: var(--text-dark);">E-Wallet</h4>
+                <div class="payment-method hover-scale" onclick="selectPayment('gopay')">
+                    <div class="payment-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                            <line x1="1" y1="10" x2="23" y2="10"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600;">GoPay</div>
+                        <div style="font-size: 12px; color: var(--text-gray);">Bayar dengan GoPay</div>
+                    </div>
+                </div>
+                <div class="payment-method hover-scale" onclick="selectPayment('ovo')">
+                    <div class="payment-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600;">OVO</div>
+                        <div style="font-size: 12px; color: var(--text-gray);">Bayar dengan OVO</div>
+                    </div>
+                </div>
+                <div class="payment-method hover-scale" onclick="selectPayment('dana')">
+                    <div class="payment-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"/>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600;">DANA</div>
+                        <div style="font-size: 12px; color: var(--text-gray);">Bayar dengan DANA</div>
+                    </div>
+                </div>
+                
+                <h4 style="margin: 24px 0 16px; color: var(--text-dark);">Transfer Bank</h4>
+                <div class="payment-method hover-scale" onclick="selectPayment('bca')">
+                    <div class="payment-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600;">BCA Virtual Account</div>
+                        <div style="font-size: 12px; color: var(--text-gray);">Transfer ke VA BCA</div>
+                    </div>
+                </div>
+                <div class="payment-method hover-scale" onclick="selectPayment('mandiri')">
+                    <div class="payment-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600;">Mandiri Virtual Account</div>
+                        <div style="font-size: 12px; color: var(--text-gray);">Transfer ke VA Mandiri</div>
+                    </div>
+                </div>
+                <div class="payment-method hover-scale" onclick="selectPayment('bni')">
+                    <div class="payment-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600;">BNI Virtual Account</div>
+                        <div style="font-size: 12px; color: var(--text-gray);">Transfer ke VA BNI</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div class="modal" id="reviewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Tulis Review</h3>
+                <button class="close-btn" onclick="closeModal('reviewModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="submitReview(event)">
+                    <div class="form-group">
+                        <label class="form-label">Rating</label>
+                        <div style="display: flex; gap: 8px; font-size: 32px;">
+                            <span class="star-rating" data-rating="1" onclick="setRating(1)">⭐</span>
+                            <span class="star-rating" data-rating="2" onclick="setRating(2)">⭐</span>
+                            <span class="star-rating" data-rating="3" onclick="setRating(3)">⭐</span>
+                            <span class="star-rating" data-rating="4" onclick="setRating(4)">⭐</span>
+                            <span class="star-rating" data-rating="5" onclick="setRating(5)">⭐</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Review Anda</label>
+                        <textarea class="form-input" id="reviewText" rows="4" required placeholder="Ceritakan pengalaman Anda..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Kirim Review</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== DATA & STATE ==========
+        let currentUser = null;
+        let currentDestination = null;
+        let currentBooking = null;
+        let selectedRating = 5;
+        let currentPage = 1;
+        let itemsPerPage = 6;
+        let currentCategory = 'all';
+        let appliedDiscount = 0;
+        let appliedVoucherCode = '';
+        let compareList = [];
+        let lastScrollTop = 0;
+
+        const destinations = [
+            {
+                id: 1,
+                name: 'Pantai Anyer',
+                location: 'Anyer',
+                category: 'pantai',
+                price: 25000,
+                rating: 4.7,
+                reviews: 1250,
+                image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80',
+                description: 'Pantai Anyer adalah destinasi wisata pantai yang terkenal di Banten dengan pemandangan sunset yang memukau dan berbagai aktivitas air yang menarik.',
+                facilities: ['Parkir', 'Toilet', 'Musholla', 'Restoran', 'Banana Boat', 'Jet Ski']
+            },
+            {
+                id: 2,
+                name: 'Pantai Carita',
+                location: 'Carita',
+                category: 'pantai',
+                price: 30000,
+                rating: 4.6,
+                reviews: 980,
+                image: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?w=800&q=80',
+                description: 'Pantai Carita menawarkan pasir putih yang lembut dan air laut yang jernih, cocok untuk liburan keluarga dengan berbagai fasilitas lengkap.',
+                facilities: ['Parkir', 'Toilet', 'Musholla', 'Penginapan', 'Snorkeling', 'Diving']
+            },
+            {
+                id: 3,
+                name: 'Tanjung Lesung',
+                location: 'Tanjung Lesung',
+                category: 'pantai',
+                price: 50000,
+                rating: 4.8,
+                reviews: 1580,
+                image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80',
+                description: 'Resort pantai eksklusif dengan pemandangan laut yang indah, fasilitas lengkap, dan berbagai aktivitas wisata air yang menarik.',
+                facilities: ['Resort', 'Restaurant', 'Water Sports', 'Spa', 'Swimming Pool', 'Beach Club']
+            },
+            {
+                id: 4,
+                name: 'Taman Nasional Ujung Kulon',
+                location: 'Ujung Kulon',
+                category: 'taman',
+                price: 150000,
+                rating: 4.9,
+                reviews: 2100,
+                image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+                description: 'Situs Warisan Dunia UNESCO yang menjadi habitat badak Jawa. Menawarkan keindahan alam yang masih alami dengan flora dan fauna yang beragam.',
+                facilities: ['Trekking', 'Camping', 'Wildlife Watching', 'Guide', 'Boat Tour', 'Photography']
+            },
+            {
+                id: 5,
+                name: 'Pulau Umang',
+                location: 'Pandeglang',
+                category: 'pantai',
+                price: 75000,
+                rating: 4.5,
+                reviews: 850,
+                image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80',
+                description: 'Pulau pribadi dengan cottage di atas air, menawarkan pengalaman menginap yang unik dengan pemandangan laut yang spektakuler.',
+                facilities: ['Cottage', 'Restaurant', 'Fishing', 'Snorkeling', 'Kayaking', 'BBQ Area']
+            },
+            {
+                id: 6,
+                name: 'Pantai Sawarna',
+                location: 'Lebak',
+                category: 'pantai',
+                price: 20000,
+                rating: 4.6,
+                reviews: 720,
+                image: 'https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=800&q=80',
+                description: 'Pantai tersembunyi dengan ombak yang cocok untuk surfing, pasir putih, dan gua-gua alami yang eksotis.',
+                facilities: ['Surfing', 'Camping', 'Cave Exploration', 'Homestay', 'Local Guide']
+            },
+            {
+                id: 7,
+                name: 'Keraton Surosowan',
+                location: 'Serang',
+                category: 'budaya',
+                price: 10000,
+                rating: 4.3,
+                reviews: 450,
+                image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
+                description: 'Situs bersejarah peninggalan Kesultanan Banten yang menjadi saksi bisu kejayaan masa lalu dengan arsitektur yang megah.',
+                facilities: ['Museum', 'Guide', 'Photo Spot', 'Souvenir Shop', 'Parking']
+            },
+            {
+                id: 8,
+                name: 'Masjid Agung Banten',
+                location: 'Serang',
+                category: 'budaya',
+                price: 5000,
+                rating: 4.7,
+                reviews: 1100,
+                image: 'https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?w=800&q=80',
+                description: 'Masjid bersejarah dengan arsitektur khas Banten yang memadukan gaya Jawa, Cina, dan Eropa. Landmark penting Kota Serang.',
+                facilities: ['Worship', 'Museum', 'Library', 'Guide', 'Parking', 'Souvenir']
+            },
+            {
+                id: 9,
+                name: 'Danau Tasikardi',
+                location: 'Serang',
+                category: 'taman',
+                price: 15000,
+                rating: 4.4,
+                reviews: 680,
+                image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+                description: 'Danau buatan bersejarah dengan pemandangan yang asri, cocok untuk piknik keluarga dan menikmati sunset.',
+                facilities: ['Boating', 'Fishing', 'Picnic Area', 'Playground', 'Food Court', 'Parking']
+            },
+            {
+                id: 10,
+                name: 'Curug Cigamea',
+                location: 'Pandeglang',
+                category: 'taman',
+                price: 20000,
+                rating: 4.5,
+                reviews: 520,
+                image: 'https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=800&q=80',
+                description: 'Air terjun alami yang dikelilingi hutan tropis, menawarkan kesegaran dan keindahan alam yang mempesona.',
+                facilities: ['Trekking', 'Swimming', 'Photography', 'Camping', 'Local Guide', 'Warung']
+            },
+            {
+                id: 11,
+                name: 'Pantai Sambolo',
+                location: 'Anyer',
+                category: 'pantai',
+                price: 25000,
+                rating: 4.6,
+                reviews: 890,
+                image: 'https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?w=800&q=80',
+                description: 'Pantai dengan pasir hitam vulkanik yang unik, ombak tenang, dan pemandangan Gunung Krakatau di kejauhan.',
+                facilities: ['Swimming', 'Beach Volleyball', 'Restaurant', 'Cottage', 'Parking', 'Toilet']
+            },
+            {
+                id: 12,
+                name: 'Benteng Speelwijk',
+                location: 'Serang',
+                category: 'budaya',
+                price: 10000,
+                rating: 4.2,
+                reviews: 380,
+                image: 'https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=800&q=80',
+                description: 'Benteng peninggalan VOC yang masih kokoh berdiri, menjadi saksi sejarah kolonial di Banten.',
+                facilities: ['Historical Tour', 'Photography', 'Museum', 'Guide', 'Parking']
+            },
+            {
+                id: 13,
+                name: 'Pulau Sangiang',
+                location: 'Anyer',
+                category: 'pantai',
+                price: 100000,
+                rating: 4.8,
+                reviews: 1350,
+                image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80',
+                description: 'Pulau eksotis dengan terumbu karang yang indah, air laut jernih, dan spot diving terbaik di Banten.',
+                facilities: ['Diving', 'Snorkeling', 'Camping', 'BBQ', 'Boat Rental', 'Underwater Photography']
+            },
+            {
+                id: 14,
+                name: 'Rawa Dano',
+                location: 'Serang',
+                category: 'taman',
+                price: 15000,
+                rating: 4.3,
+                reviews: 420,
+                image: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&q=80',
+                description: 'Kawasan rawa dengan ekosistem unik, habitat berbagai jenis burung dan tempat yang sempurna untuk bird watching.',
+                facilities: ['Bird Watching', 'Photography', 'Boat Tour', 'Nature Walk', 'Guide']
+            },
+            {
+                id: 15,
+                name: 'Kampung Baduy',
+                location: 'Lebak',
+                category: 'budaya',
+                price: 50000,
+                rating: 4.9,
+                reviews: 1680,
+                image: 'https://images.unsplash.com/photo-1528127269322-539801943592?w=800&q=80',
+                description: 'Desa adat yang masih mempertahankan tradisi dan kearifan lokal, menawarkan pengalaman budaya yang autentik.',
+                facilities: ['Cultural Tour', 'Homestay', 'Traditional Crafts', 'Local Guide', 'Trekking']
+            },
+            {
+                id: 16,
+                name: 'Sate Bandeng Serang',
+                location: 'Serang',
+                category: 'kuliner',
+                price: 45000,
+                rating: 4.7,
+                reviews: 2200,
+                image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80',
+                description: 'Kuliner khas Banten yang wajib dicoba, sate bandeng dengan bumbu rempah yang khas dan cita rasa yang lezat.',
+                facilities: ['Restaurant', 'Takeaway', 'Delivery', 'Parking', 'AC Room']
+            },
+            {
+                id: 17,
+                name: 'Rabeg Banten',
+                location: 'Serang',
+                category: 'kuliner',
+                price: 35000,
+                rating: 4.6,
+                reviews: 1450,
+                image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&q=80',
+                description: 'Makanan tradisional Banten berupa gulai kambing dengan kuah santan yang gurih dan daging yang empuk.',
+                facilities: ['Dine-in', 'Takeaway', 'Catering', 'Parking', 'Prayer Room']
+            },
+            {
+                id: 18,
+                name: 'Pantai Bagedur',
+                location: 'Lebak',
+                category: 'pantai',
+                price: 15000,
+                rating: 4.4,
+                reviews: 560,
+                image: 'https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?w=800&q=80',
+                description: 'Pantai yang masih sepi dengan keindahan alam yang alami, cocok untuk yang mencari ketenangan.',
+                facilities: ['Swimming', 'Camping', 'Fishing', 'Local Food', 'Parking']
+            }
+        ];
+
+        const vouchers = [
+            { code: 'BANTEN50', discount: 50000, description: 'Diskon Rp 50.000 untuk semua destinasi', minTransaction: 200000 },
+            { code: 'PANTAI30', discount: 30000, description: 'Diskon Rp 30.000 untuk destinasi pantai', minTransaction: 100000 },
+            { code: 'NEWUSER', discount: 25000, description: 'Diskon Rp 25.000 untuk pengguna baru', minTransaction: 75000 },
+            { code: 'WEEKEND20', discount: 20000, description: 'Diskon Rp 20.000 untuk weekend', minTransaction: 50000 }
+        ];
+
+        // ========== INITIALIZATION ==========
+        window.addEventListener('DOMContentLoaded', () => {
+            initApp();
+        });
+
+        function initApp() {
+            loadUserData();
+            loadDestinations();
+            setupEventListeners();
+            checkAuth();
+            
+            // Fast loading - hide after 500ms
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 500);
+
+            // Set minimum date for booking
+            const today = new Date().toISOString().split('T')[0];
+            const bookingDateInput = document.getElementById('bookingDate');
+            if (bookingDateInput) {
+                bookingDateInput.min = today;
+            }
+        }
+
+        function setupEventListeners() {
+            // Search
+            document.getElementById('searchInput').addEventListener('input', handleSearch);
+            
+            // Scroll events
+            window.addEventListener('scroll', handleScroll);
+        }
+
+        // ========== SCROLL FEATURES ==========
+        function handleScroll() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const fab = document.getElementById('fabButton');
+            
+            // Show/hide FAB
+            if (scrollTop > 300) {
+                fab.style.display = 'flex';
+            } else {
+                fab.style.display = 'none';
+            }
+            
+            lastScrollTop = scrollTop;
+        }
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // ========== AUTHENTICATION ==========
+        function checkAuth() {
+            if (!currentUser) {
+                // Auto login with demo account for testing
+                currentUser = {
+                    name: 'Demo User',
+                    email: 'demo@bantentravel.com'
+                };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+            updateUI();
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                currentUser = { name: user.name, email: user.email };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                closeModal('loginModal');
+                showNotification('Berhasil masuk!', 'success');
+                updateUI();
+            } else {
+                showNotification('Email atau password salah!', 'error');
+            }
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showNotification('Password tidak cocok!', 'error');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            
+            if (users.find(u => u.email === email)) {
+                showNotification('Email sudah terdaftar!', 'error');
+                return;
+            }
+
+            users.push({ name, email, password });
+            localStorage.setItem('users', JSON.stringify(users));
+
+            currentUser = { name, email };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            closeModal('registerModal');
+            showNotification('Registrasi berhasil!', 'success');
+            updateUI();
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            showNotification('Berhasil keluar', 'success');
+            navigateTo('home');
+            updateUI();
+        }
+
+        function showLoginModal() {
+            closeModal('registerModal');
+            document.getElementById('loginModal').classList.add('active');
+        }
+
+        function showRegisterModal() {
+            closeModal('loginModal');
+            document.getElementById('registerModal').classList.add('active');
+        }
+
+        // ========== NAVIGATION ==========
+        function navigateTo(section) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(section + 'Section').classList.add('active');
+            
+            // Update nav active state
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.target.closest('.nav-item').classList.add('active');
+            
+            // Load section data
+            switch(section) {
+                case 'home':
+                    loadDestinations();
+                    break;
+                case 'wishlist':
+                    loadWishlist();
+                    break;
+                case 'cart':
+                    loadCart();
+                    break;
+                case 'history':
+                    loadHistory();
+                    break;
+                case 'profile':
+                    loadProfile();
+                    break;
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ========== DESTINATIONS ==========
+        function loadDestinations() {
+            const container = document.getElementById('destinationList');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filtered = destinations.filter(d => {
+                const matchSearch = d.name.toLowerCase().includes(searchTerm) || 
+                                  d.location.toLowerCase().includes(searchTerm);
+                const matchCategory = currentCategory === 'all' || d.category === currentCategory;
+                return matchSearch && matchCategory;
+            });
+
+            const start = 0;
+            const end = currentPage * itemsPerPage;
+            const paginatedDestinations = filtered.slice(start, end);
+
+            container.innerHTML = paginatedDestinations.map(dest => createDestinationCard(dest)).join('');
+            
+            // Show/hide load more button
+            const loadMoreBtn = document.getElementById('loadMoreContainer');
+            if (end >= filtered.length) {
+                loadMoreBtn.style.display = 'none';
+            } else {
+                loadMoreBtn.style.display = 'block';
+            }
+        }
+
+        function createDestinationCard(dest) {
+            const isWishlisted = isInWishlist(dest.id);
+            const heartIcon = isWishlisted 
+                ? `<svg viewBox="0 0 24 24" fill="#ef4444" stroke="#ef4444" stroke-width="2">
+                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                   </svg>`
+                : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                   </svg>`;
+            
+            return `
+                <div class="card hover-lift animate-in" onclick="showDetail(${dest.id})">
+                    <div style="position: relative; overflow: hidden;">
+                        <img src="${dest.image}" alt="${dest.name}" class="card-image" loading="lazy">
+                        <div class="card-badge">${getCategoryLabel(dest.category)}</div>
+                        <button class="wishlist-btn ${isWishlisted ? 'active' : ''}" 
+                                onclick="event.stopPropagation(); toggleWishlist(${dest.id})">
+                            ${heartIcon}
+                        </button>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">${dest.name}</h3>
+                        <div class="card-location">
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle;">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            ${dest.location}
+                        </div>
+                        <div class="card-rating">
+                            <div class="stars">
+                                ${Array(Math.floor(dest.rating)).fill('<svg class="icon-sm" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>').join('')}
+                            </div>
+                            <span class="rating-text">${dest.rating} (${dest.reviews} reviews)</span>
+                        </div>
+                        <div class="card-footer">
+                            <div>
+                                <div class="price">Rp ${dest.price.toLocaleString('id-ID')}</div>
+                                <div class="price-label">per orang</div>
+                            </div>
+                            <button class="btn btn-primary hover-scale" onclick="event.stopPropagation(); showBookingModal(${dest.id})">
+                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                                Book
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getCategoryLabel(category) {
+            const labels = {
+                'pantai': 'Pantai',
+                'taman': 'Taman',
+                'budaya': 'Budaya',
+                'kuliner': 'Kuliner'
+            };
+            return labels[category] || category;
+        }
+
+        function getCategoryIcon(category) {
+            const icons = {
+                'pantai': `<svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v20M2 12h20M12 2C8 6 8 10 12 12c4-2 4-6 0-10zM12 12c-4 2-4 6 0 10 4-4 4-8 0-10z"/>
+                </svg>`,
+                'taman': `<svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v20M8 6c-3 0-5 2-5 5s2 5 5 5h8c3 0 5-2 5-5s-2-5-5-5"/>
+                </svg>`,
+                'budaya': `<svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 6h16M4 12h16M4 18h16"/>
+                    <path d="M6 2v4M18 2v4M6 18v4M18 18v4"/>
+                </svg>`,
+                'kuliner': `<svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3z"/>
+                </svg>`
+            };
+            return icons[category] || '';
+        }
+
+        function loadMoreDestinations() {
+            currentPage++;
+            loadDestinations();
+        }
+
+        function handleSearch(e) {
+            currentPage = 1;
+            loadDestinations();
+        }
+
+        function filterByCategory(category) {
+            currentCategory = category;
+            currentPage = 1;
+            
+            // Update tab active state
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            loadDestinations();
+        }
+
+        function showDetail(id) {
+            const dest = destinations.find(d => d.id === id);
+            if (!dest) return;
+
+            currentDestination = dest;
+            const reviews = getReviews(id);
+            const isWishlisted = isInWishlist(id);
+
+            const detailHTML = `
+                <img src="${dest.image}" alt="${dest.name}" class="detail-image">
+                <div class="detail-content">
+                    <div class="detail-header">
+                        <h1 class="detail-title">${dest.name}</h1>
+                        <div class="info-row">
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            <span>${dest.location}</span>
+                        </div>
+                        <div class="info-row">
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="#ffb700" stroke="#ffb700" stroke-width="2">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                            <span>${dest.rating} (${dest.reviews} reviews)</span>
+                        </div>
+                        <div class="info-row">
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"/>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                            </svg>
+                            <span style="font-weight: 600; color: var(--primary);">Rp ${dest.price.toLocaleString('id-ID')} / orang</span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+                        <button class="btn btn-primary hover-scale" style="flex: 1;" onclick="showBookingModal(${dest.id})">
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                            Book Sekarang
+                        </button>
+                        <button class="btn btn-outline hover-scale" onclick="toggleWishlist(${dest.id}); showDetail(${dest.id});">
+                            ${isWishlisted ? 
+                                `<svg class="icon-sm" viewBox="0 0 24 24" fill="#ff5e5e" stroke="#ff5e5e" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                </svg>` :
+                                `<svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                </svg>`
+                            }
+                            ${isWishlisted ? 'Tersimpan' : 'Simpan'}
+                        </button>
+                    </div>
+
+                    <h3 style="margin-bottom: 12px; font-size: 18px;">Deskripsi</h3>
+                    <p class="description">${dest.description}</p>
+
+                    <h3 style="margin-bottom: 12px; font-size: 18px;">Fasilitas</h3>
+                    <div class="facilities">
+                        ${dest.facilities.map(f => `<span class="facility-tag">
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            ${f}
+                        </span>`).join('')}
+                    </div>
+
+                    <div class="reviews-section">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <h3 style="font-size: 18px;">Reviews (${reviews.length})</h3>
+                            <button class="btn btn-outline hover-scale" onclick="showReviewModal(${dest.id})">Tulis Review</button>
+                        </div>
+                        ${reviews.length > 0 ? reviews.map(r => `
+                            <div class="review-card">
+                                <div class="review-header">
+                                    <span class="reviewer-name">${r.userName}</span>
+                                    <span class="review-date">${r.date}</span>
+                                </div>
+                                <div class="stars" style="margin-bottom: 8px;">
+                                    ${Array(r.rating).fill('<svg class="icon-sm" viewBox="0 0 24 24" fill="#ffb700" stroke="#ffb700" stroke-width="2" style="display: inline-block;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>').join('')}
+                                </div>
+                                <p style="color: var(--text-gray);">${r.text}</p>
+                            </div>
+                        `).join('') : '<p style="text-align: center; color: var(--text-gray);">Belum ada review</p>'}
+                    </div>
+
+                    <button class="btn btn-outline btn-block hover-scale" onclick="navigateTo('home')" style="margin-top: 24px;">
+                        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="19" y1="12" x2="5" y2="12"/>
+                            <polyline points="12 19 5 12 12 5"/>
+                        </svg>
+                        Kembali ke Home
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('detailContent').innerHTML = detailHTML;
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById('detailSection').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ========== WISHLIST ==========
+        // ========== WISHLIST ==========
+        function toggleWishlist(id) {
+            let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+            const index = wishlist.indexOf(id);
+            
+            if (index > -1) {
+                wishlist.splice(index, 1);
+                showNotification('Dihapus dari wishlist', 'success');
+            } else {
+                wishlist.push(id);
+                showNotification('Ditambahkan ke wishlist', 'success');
+            }
+            
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            loadDestinations();
+            loadWishlist();
+        }
+
+        function isInWishlist(id) {
+            const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+            return wishlist.includes(id);
+        }
+
+        function loadWishlist() {
+            const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+            const container = document.getElementById('wishlistList');
+            
+            if (wishlist.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg class="empty-icon icon-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 64px; height: 64px; opacity: 0.5; margin: 0 auto 16px;">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                        <h3>Wishlist Kosong</h3>
+                        <p>Belum ada destinasi yang disimpan</p>
+                        <button class="btn btn-primary hover-scale" onclick="navigateTo('home')" style="margin-top: 20px;">
+                            Jelajahi Destinasi
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            const wishlistDestinations = destinations.filter(d => wishlist.includes(d.id));
+            container.innerHTML = wishlistDestinations.map(dest => createDestinationCard(dest)).join('');
+        }
+
+        // ========== BOOKING ==========
+        function showBookingModal(id) {
+            if (!currentUser) {
+                showNotification('Silakan login terlebih dahulu untuk booking', 'warning');
+                showLoginModal();
+                return;
+            }
+
+            const dest = destinations.find(d => d.id === id);
+            if (!dest) return;
+
+            currentDestination = dest;
+            appliedDiscount = 0;
+            appliedVoucherCode = '';
+            
+            document.getElementById('bookingPricePerTicket').textContent = `Rp ${dest.price.toLocaleString('id-ID')}`;
+            document.getElementById('bookingTickets').value = 1;
+            document.getElementById('bookingVoucher').value = '';
+            document.getElementById('discountRow').style.display = 'none';
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('bookingDate').min = today;
+            document.getElementById('bookingDate').value = today;
+            
+            updateBookingTotal();
+            document.getElementById('bookingModal').classList.add('active');
+        }
+
+        function updateBookingTotal() {
+            if (!currentDestination) return;
+            
+            const tickets = parseInt(document.getElementById('bookingTickets').value) || 1;
+            const subtotal = currentDestination.price * tickets;
+            const total = subtotal - appliedDiscount;
+            
+            document.getElementById('bookingTicketCount').textContent = tickets;
+            document.getElementById('bookingTotal').textContent = `Rp ${total.toLocaleString('id-ID')}`;
+            
+            if (appliedDiscount > 0) {
+                document.getElementById('discountRow').style.display = 'flex';
+                document.getElementById('bookingDiscount').textContent = `- Rp ${appliedDiscount.toLocaleString('id-ID')}`;
+            } else {
+                document.getElementById('discountRow').style.display = 'none';
+            }
+        }
+
+        function applyVoucher() {
+            const code = document.getElementById('bookingVoucher').value.toUpperCase().trim();
+            
+            if (!code) {
+                showNotification('Masukkan kode voucher', 'warning');
+                return;
+            }
+
+            const voucher = vouchers.find(v => v.code === code);
+            
+            if (!voucher) {
+                showNotification('Kode voucher tidak valid', 'error');
+                return;
+            }
+
+            const tickets = parseInt(document.getElementById('bookingTickets').value) || 1;
+            const subtotal = currentDestination.price * tickets;
+
+            if (subtotal < voucher.minTransaction) {
+                showNotification(`Minimal transaksi Rp ${voucher.minTransaction.toLocaleString('id-ID')}`, 'warning');
+                return;
+            }
+
+            appliedDiscount = voucher.discount;
+            appliedVoucherCode = code;
+            updateBookingTotal();
+            showNotification(`Voucher ${code} berhasil digunakan! Hemat Rp ${voucher.discount.toLocaleString('id-ID')}`, 'success');
+        }
+
+        function handleBooking(e) {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                showNotification('Silakan login terlebih dahulu', 'warning');
+                showLoginModal();
+                return;
+            }
+
+            if (!currentDestination) {
+                showNotification('Destinasi tidak ditemukan', 'error');
+                return;
+            }
+            
+            const date = document.getElementById('bookingDate').value;
+            const tickets = parseInt(document.getElementById('bookingTickets').value);
+            
+            if (!date) {
+                showNotification('Pilih tanggal kunjungan', 'warning');
+                return;
+            }
+
+            if (tickets < 1 || tickets > 10) {
+                showNotification('Jumlah tiket harus antara 1-10', 'warning');
+                return;
+            }
+
+            const subtotal = currentDestination.price * tickets;
+            const total = subtotal - appliedDiscount;
+
+            currentBooking = {
+                destination: currentDestination,
+                date,
+                tickets,
+                subtotal,
+                discount: appliedDiscount,
+                voucherCode: appliedVoucherCode,
+                total,
+                userName: currentUser.name,
+                userEmail: currentUser.email
+            };
+
+            closeModal('bookingModal');
+            document.getElementById('paymentModal').classList.add('active');
+        }
+
+        // ========== PAYMENT ==========
+        function selectPayment(method) {
+            if (!currentBooking) {
+                showNotification('Data booking tidak ditemukan', 'error');
+                return;
+            }
+
+            if (!currentUser) {
+                showNotification('Silakan login terlebih dahulu', 'warning');
+                closeModal('paymentModal');
+                showLoginModal();
+                return;
+            }
+
+            // Show loading
+            showNotification('Memproses pembayaran...', 'success');
+
+            // Simulate payment processing
+            setTimeout(() => {
+                // Add to history
+                let history = JSON.parse(localStorage.getItem('history') || '[]');
+                const transaction = {
+                    ...currentBooking,
+                    id: Date.now(),
+                    paymentMethod: method,
+                    status: 'success',
+                    bookingDate: new Date().toISOString(),
+                    bookingCode: 'BT' + Date.now().toString().slice(-8)
+                };
+                
+                history.unshift(transaction);
+                localStorage.setItem('history', JSON.stringify(history));
+
+                closeModal('paymentModal');
+                
+                // Show success notification with booking code
+                showNotification(`Pembayaran berhasil! Kode Booking: ${transaction.bookingCode}`, 'success');
+                
+                // Reset booking data
+                currentBooking = null;
+                appliedDiscount = 0;
+                appliedVoucherCode = '';
+                
+                // Navigate to history after 2 seconds
+                setTimeout(() => {
+                    navigateTo('history');
+                }, 2000);
+            }, 1500);
+        }
+
+        function loadCart() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const container = document.getElementById('cartList');
+            const summaryContainer = document.getElementById('cartSummary');
+            
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg class="empty-icon icon-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 64px; height: 64px; opacity: 0.5; margin: 0 auto 16px;">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <h3>Keranjang Kosong</h3>
+                        <p>Belum ada item di keranjang</p>
+                        <button class="btn btn-primary hover-scale" onclick="navigateTo('home')" style="margin-top: 20px;">
+                            Mulai Booking
+                        </button>
+                    </div>
+                `;
+                summaryContainer.innerHTML = '';
+                return;
+            }
+
+            const total = cart.reduce((sum, item) => sum + item.total, 0);
+
+            container.innerHTML = cart.map((item, index) => `
+                <div class="cart-item hover-lift animate-in">
+                    <div class="cart-item-header">
+                        <div>
+                            <h3 style="font-size: 18px; margin-bottom: 4px;">${item.destination.name}</h3>
+                            <p style="color: var(--text-gray); font-size: 14px;">
+                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle;">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                                ${item.date}
+                            </p>
+                        </div>
+                        <button class="remove-btn hover-scale" onclick="removeFromCart(${index})">Hapus</button>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);">
+                        <span style="color: var(--text-gray);">${item.tickets} tiket</span>
+                        <span style="font-weight: 600; color: var(--primary);">Rp ${item.total.toLocaleString('id-ID')}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            summaryContainer.innerHTML = `
+                <div class="booking-summary">
+                    <div class="summary-row total">
+                        <span>Total Pembayaran</span>
+                        <span>Rp ${total.toLocaleString('id-ID')}</span>
+                    </div>
+                    <button class="btn btn-primary btn-block hover-scale" style="margin-top: 16px;" onclick="checkoutCart()">
+                        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        Checkout Semua
+                    </button>
+                </div>
+            `;
+        }
+
+        function removeFromCart(index) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart();
+            updateCartBadge();
+            showNotification('Item dihapus dari keranjang', 'success');
+        }
+
+        function checkoutCart() {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            let history = JSON.parse(localStorage.getItem('history') || '[]');
+            
+            cart.forEach(item => {
+                history.unshift({
+                    ...item,
+                    status: 'success',
+                    bookingDate: new Date().toISOString()
+                });
+            });
+
+            localStorage.setItem('history', JSON.stringify(history));
+            localStorage.setItem('cart', JSON.stringify([]));
+            
+            showNotification('Checkout berhasil!', 'success');
+            updateCartBadge();
+            navigateTo('history');
+        }
+
+        function updateCartBadge() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const badge = document.getElementById('cartBadge');
+            if (cart.length > 0) {
+                badge.textContent = cart.length;
+                badge.style.display = 'block';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function loadHistory() {
+            const history = JSON.parse(localStorage.getItem('history') || '[]');
+            const container = document.getElementById('historyList');
+            
+            if (history.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg class="empty-icon icon-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 64px; height: 64px; opacity: 0.5; margin: 0 auto 16px;">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                        </svg>
+                        <h3>Belum Ada Riwayat</h3>
+                        <p>Riwayat transaksi Anda akan muncul di sini</p>
+                        <button class="btn btn-primary hover-scale" onclick="navigateTo('home')" style="margin-top: 20px;">
+                            Mulai Booking
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = history.map(item => `
+                <div class="cart-item hover-lift animate-in">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                        <div>
+                            <h3 style="font-size: 18px; margin-bottom: 4px;">${item.destination.name}</h3>
+                            <p style="color: var(--text-gray); font-size: 14px;">
+                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle;">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                                ${new Date(item.date).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                            </p>
+                            ${item.bookingCode ? `<p style="color: var(--primary); font-size: 12px; font-weight: 600; margin-top: 4px;">Kode: ${item.bookingCode}</p>` : ''}
+                            <p style="color: var(--text-gray); font-size: 12px; margin-top: 4px;">
+                                Dibeli: ${new Date(item.bookingDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                            </p>
+                        </div>
+                        <span class="card-badge" style="position: static; background: var(--success); color: white;">
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            ${item.status === 'success' ? 'Sukses' : 'Pending'}
+                        </span>
+                    </div>
+                    <div style="background: var(--bg-light); padding: 12px; border-radius: var(--radius-sm); margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="color: var(--text-gray); font-size: 14px;">Jumlah Tiket</span>
+                            <span style="font-weight: 600;">${item.tickets} tiket</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="color: var(--text-gray); font-size: 14px;">Harga per Tiket</span>
+                            <span style="font-weight: 600;">Rp ${item.destination.price.toLocaleString('id-ID')}</span>
+                        </div>
+                        ${item.discount > 0 ? `
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; color: var(--success);">
+                            <span style="font-size: 14px;">Diskon (${item.voucherCode})</span>
+                            <span style="font-weight: 600;">- Rp ${item.discount.toLocaleString('id-ID')}</span>
+                        </div>
+                        ` : ''}
+                        <div style="display: flex; justify-content: space-between; padding-top: 8px; border-top: 1px solid var(--border);">
+                            <span style="font-weight: 600;">Total Bayar</span>
+                            <span style="font-weight: 700; color: var(--primary); font-size: 18px;">Rp ${item.total.toLocaleString('id-ID')}</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-outline hover-scale" style="flex: 1;" onclick="showDetail(${item.destination.id})">
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="m21 21-4.35-4.35"/>
+                            </svg>
+                            Lihat Detail
+                        </button>
+                        <button class="btn btn-primary hover-scale" style="flex: 1;" onclick="showReviewModal(${item.destination.id})">
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                            Beri Review
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ========== REVIEWS ==========
+        function getReviews(destinationId) {
+            const reviews = JSON.parse(localStorage.getItem('reviews') || '{}');
+            return reviews[destinationId] || [];
+        }
+
+        function showReviewModal(destinationId) {
+            currentDestination = destinations.find(d => d.id === destinationId);
+            selectedRating = 5;
+            document.getElementById('reviewText').value = '';
+            document.getElementById('reviewModal').classList.add('active');
+        }
+
+        function setRating(rating) {
+            selectedRating = rating;
+            document.querySelectorAll('.star-rating').forEach((star, index) => {
+                star.style.opacity = index < rating ? '1' : '0.3';
+            });
+        }
+
+        function submitReview(e) {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                showNotification('Silakan login terlebih dahulu', 'warning');
+                return;
+            }
+
+            const text = document.getElementById('reviewText').value;
+            const reviews = JSON.parse(localStorage.getItem('reviews') || '{}');
+            
+            if (!reviews[currentDestination.id]) {
+                reviews[currentDestination.id] = [];
+            }
+
+            reviews[currentDestination.id].unshift({
+                userName: currentUser.name,
+                rating: selectedRating,
+                text,
+                date: new Date().toLocaleDateString('id-ID')
+            });
+
+            localStorage.setItem('reviews', JSON.stringify(reviews));
+            closeModal('reviewModal');
+            showNotification('Review berhasil ditambahkan!', 'success');
+            
+            // Refresh detail if on detail page
+            if (document.getElementById('detailSection').classList.contains('active')) {
+                showDetail(currentDestination.id);
+            }
+        }
+
+        function loadProfile() {
+            const container = document.getElementById('profileContent');
+            
+            if (!currentUser) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg class="empty-icon icon-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 64px; height: 64px; opacity: 0.5; margin: 0 auto 16px;">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <h3>Belum Login</h3>
+                        <p>Silakan login untuk mengakses profil</p>
+                        <button class="btn btn-primary hover-scale" onclick="showLoginModal()" style="margin-top: 20px;">
+                            Login
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            const history = JSON.parse(localStorage.getItem('history') || '[]');
+            const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+
+            container.innerHTML = `
+                <div class="profile-header">
+                    <div class="profile-avatar">${currentUser.name.charAt(0).toUpperCase()}</div>
+                    <div class="profile-name">${currentUser.name}</div>
+                    <div class="profile-email">${currentUser.email}</div>
+                </div>
+
+                <div class="menu-list">
+                    <div class="menu-item">
+                        <div class="menu-item-content">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                            </svg>
+                            <span>Total Transaksi</span>
+                        </div>
+                        <span style="font-weight: 600; color: var(--primary);">${history.length}</span>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-content">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
+                            <span>Wishlist</span>
+                        </div>
+                        <span style="font-weight: 600; color: var(--primary);">${wishlist.length}</span>
+                    </div>
+                    <div class="menu-item hover-scale" onclick="showVouchers()">
+                        <div class="menu-item-content">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                                <line x1="12" y1="22.08" x2="12" y2="12"/>
+                            </svg>
+                            <span>Voucher Saya</span>
+                        </div>
+                        <span>→</span>
+                    </div>
+                    <div class="menu-item hover-scale" onclick="toggleDarkMode()">
+                        <div class="menu-item-content">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                            </svg>
+                            <span>Dark Mode</span>
+                        </div>
+                        <span id="darkModeStatus">${document.documentElement.getAttribute('data-theme') === 'dark' ? 'ON' : 'OFF'}</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-danger btn-block hover-scale" onclick="handleLogout()" style="margin-top: 20px; background: var(--danger);">
+                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    Logout
+                </button>
+            `;
+        }
+
+        // ========== VOUCHERS ==========
+        function showVouchers() {
+            const voucherHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Voucher Tersedia</h3>
+                        <button class="close-btn" onclick="closeModal('voucherModal')">✕</button>
+                    </div>
+                    <div class="modal-body">
+                        ${vouchers.map(v => `
+                            <div class="voucher-card">
+                                <div class="voucher-code">${v.code}</div>
+                                <div class="voucher-desc">${v.description}</div>
+                                <div class="voucher-expiry">Min. transaksi Rp ${v.minTransaction.toLocaleString('id-ID')}</div>
+                                <button class="btn btn-outline" style="margin-top: 12px; background: white; color: var(--primary);" 
+                                        onclick="copyVoucher('${v.code}')">
+                                    Salin Kode
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.id = 'voucherModal';
+            modal.innerHTML = voucherHTML;
+            modal.onclick = (e) => {
+                if (e.target === modal) closeModal('voucherModal');
+            };
+            document.body.appendChild(modal);
+        }
+
+        function copyVoucher(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                showNotification(`Kode ${code} berhasil disalin!`, 'success');
+            });
+        }
+
+        // ========== FILTER ==========
+        function showFilterModal() {
+            document.getElementById('filterModal').classList.add('active');
+        }
+
+        function applyFilter() {
+            const price = document.getElementById('filterPrice').value;
+            const rating = parseFloat(document.getElementById('filterRating').value);
+            const location = document.getElementById('filterLocation').value;
+
+            let filtered = destinations;
+
+            // Filter by price
+            if (price !== 'all') {
+                const [min, max] = price.split('-').map(Number);
+                filtered = filtered.filter(d => d.price >= min && d.price <= max);
+            }
+
+            // Filter by rating
+            if (rating > 0) {
+                filtered = filtered.filter(d => d.rating >= rating);
+            }
+
+            // Filter by location
+            if (location !== 'all') {
+                filtered = filtered.filter(d => d.location === location);
+            }
+
+            // Display filtered results
+            const container = document.getElementById('destinationList');
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🔍</div>
+                        <h3>Tidak Ada Hasil</h3>
+                        <p>Coba ubah filter pencarian Anda</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = filtered.map(dest => createDestinationCard(dest)).join('');
+            }
+
+            closeModal('filterModal');
+            showNotification(`Ditemukan ${filtered.length} destinasi`, 'success');
+        }
+
+        // ========== DARK MODE ==========
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            const themeIcon = document.getElementById('themeIcon');
+            if (newTheme === 'dark') {
+                themeIcon.innerHTML = `<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"/>
+                                      <circle cx="12" cy="12" r="4"/>`;
+            } else {
+                themeIcon.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+            }
+            
+            const darkModeStatus = document.getElementById('darkModeStatus');
+            if (darkModeStatus) {
+                darkModeStatus.textContent = newTheme === 'dark' ? 'ON' : 'OFF';
+            }
+            
+            showNotification(`Mode ${newTheme === 'dark' ? 'gelap' : 'terang'} diaktifkan`, 'success');
+        }
+
+        // ========== PARALLAX EFFECT ==========
+        let mouseX = 0;
+        let mouseY = 0;
+        let currentX = 0;
+        let currentY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX / window.innerWidth - 0.5;
+            mouseY = e.clientY / window.innerHeight - 0.5;
+        });
+
+        function animateParallax() {
+            currentX += (mouseX * 20 - currentX) * 0.05;
+            currentY += (mouseY * 20 - currentY) * 0.05;
+            
+            const parallaxBg = document.getElementById('parallaxBg');
+            if (parallaxBg) {
+                parallaxBg.style.transform = `translate(${currentX}px, ${currentY}px)`;
+            }
+            
+            requestAnimationFrame(animateParallax);
+        }
+
+        animateParallax();
+
+        // Scroll parallax for cards
+        window.addEventListener('scroll', () => {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                const rect = card.getBoundingClientRect();
+                const scrollPercent = (window.innerHeight - rect.top) / window.innerHeight;
+                
+                if (scrollPercent > 0 && scrollPercent < 1) {
+                    const translateY = (scrollPercent - 0.5) * 20;
+                    card.style.transform = `translateY(${translateY}px)`;
+                }
+            });
+        });
+
+        // ========== NOTIFICATIONS ==========
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notification.className = `notification ${type} show`;
+            notificationText.textContent = message;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function showNotifications() {
+            showNotification('Tidak ada notifikasi baru', 'success');
+        }
+
+        // ========== MODAL MANAGEMENT ==========
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+
+        // ========== DATA MANAGEMENT ==========
+        function loadUserData() {
+            currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            // Load theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            const themeIcon = document.getElementById('themeIcon');
+            if (savedTheme === 'dark') {
+                themeIcon.innerHTML = `<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"/>
+                                      <circle cx="12" cy="12" r="4"/>`;
+            } else {
+                themeIcon.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+            }
+            
+            updateCartBadge();
+        }
+
+        function updateUI() {
+            loadProfile();
+            updateCartBadge();
+        }
+
+        // ========== UTILITY FUNCTIONS ==========
+        function formatCurrency(amount) {
+            return `Rp ${amount.toLocaleString('id-ID')}`;
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+        }
+
+        // ========== INITIALIZE ==========
+        // Set initial rating stars opacity
+        document.addEventListener('DOMContentLoaded', () => {
+            const stars = document.querySelectorAll('.star-rating');
+            stars.forEach((star, index) => {
+                star.style.opacity = index < 5 ? '1' : '0.3';
+            });
+        });
+
+        // Prevent default form submission
+        document.addEventListener('submit', (e) => {
+            e.preventDefault();
+        });
+
+        // Add smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // ========== COMPARISON FEATURE ==========
+        function toggleCompare(id) {
+            const index = compareList.indexOf(id);
+            
+            if (index > -1) {
+                compareList.splice(index, 1);
+                showNotification('Dihapus dari perbandingan', 'success');
+            } else {
+                if (compareList.length >= 3) {
+                    showNotification('Maksimal 3 destinasi untuk dibandingkan', 'warning');
+                    return;
+                }
+                compareList.push(id);
+                showNotification('Ditambahkan ke perbandingan', 'success');
+            }
+            
+            updateCompareBar();
+            loadDestinations();
+        }
+
+        function updateCompareBar() {
+            const compareBar = document.getElementById('compareBar');
+            const compareItems = document.getElementById('compareItems');
+            const compareCount = document.getElementById('compareCount');
+            
+            if (compareList.length > 0) {
+                compareBar.classList.add('active');
+                compareCount.textContent = compareList.length;
+                
+                const items = compareList.map(id => {
+                    const dest = destinations.find(d => d.id === id);
+                    return `
+                        <div class="compare-item">
+                            ${dest.name}
+                            <button onclick="toggleCompare(${id})">×</button>
+                        </div>
+                    `;
+                }).join('');
+                
+                compareItems.innerHTML = items;
+            } else {
+                compareBar.classList.remove('active');
+            }
+        }
+
+        function showComparison() {
+            if (compareList.length < 2) {
+                showNotification('Pilih minimal 2 destinasi untuk dibandingkan', 'warning');
+                return;
+            }
+            
+            const compareDestinations = destinations.filter(d => compareList.includes(d.id));
+            
+            let comparisonHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Perbandingan Destinasi</h3>
+                        <button class="close-btn" onclick="closeModal('comparisonModal')">✕</button>
+                    </div>
+                    <div class="modal-body">
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: var(--bg-light);">
+                                        <th style="padding: 12px; text-align: left; border: 1px solid var(--border);">Kriteria</th>
+                                        ${compareDestinations.map(d => `<th style="padding: 12px; text-align: center; border: 1px solid var(--border);">${d.name}</th>`).join('')}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 12px; border: 1px solid var(--border); font-weight: 600;">Harga</td>
+                                        ${compareDestinations.map(d => `<td style="padding: 12px; text-align: center; border: 1px solid var(--border); color: var(--primary); font-weight: 600;">Rp ${d.price.toLocaleString('id-ID')}</td>`).join('')}
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 12px; border: 1px solid var(--border); font-weight: 600;">Rating</td>
+                                        ${compareDestinations.map(d => `<td style="padding: 12px; text-align: center; border: 1px solid var(--border); color: var(--warning); font-weight: 600;">${d.rating} ⭐</td>`).join('')}
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 12px; border: 1px solid var(--border); font-weight: 600;">Lokasi</td>
+                                        ${compareDestinations.map(d => `<td style="padding: 12px; text-align: center; border: 1px solid var(--border);">${d.location}</td>`).join('')}
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 12px; border: 1px solid var(--border); font-weight: 600;">Kategori</td>
+                                        ${compareDestinations.map(d => `<td style="padding: 12px; text-align: center; border: 1px solid var(--border);">${getCategoryLabel(d.category)}</td>`).join('')}
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 12px; border: 1px solid var(--border); font-weight: 600;">Reviews</td>
+                                        ${compareDestinations.map(d => `<td style="padding: 12px; text-align: center; border: 1px solid var(--border);">${d.reviews} reviews</td>`).join('')}
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 12px; border: 1px solid var(--border); font-weight: 600;">Aksi</td>
+                                        ${compareDestinations.map(d => `<td style="padding: 12px; text-align: center; border: 1px solid var(--border);">
+                                            <button class="btn btn-primary btn-block hover-scale" onclick="closeModal('comparisonModal'); showDetail(${d.id});" style="font-size: 12px; padding: 8px;">Lihat Detail</button>
+                                        </td>`).join('')}
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.id = 'comparisonModal';
+            modal.innerHTML = comparisonHTML;
+            modal.onclick = (e) => {
+                if (e.target === modal) closeModal('comparisonModal');
+            };
+            document.body.appendChild(modal);
+        }
+
+        // Service Worker for PWA (optional)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Uncomment to enable PWA
+                // navigator.serviceWorker.register('/sw.js');
+            });
+        }
+
+        // Add pull-to-refresh (optional enhancement)
+        let touchStartY = 0;
+        document.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            const touchY = e.touches[0].clientY;
+            const touchDiff = touchY - touchStartY;
+            
+            if (touchDiff > 100 && window.scrollY === 0) {
+                // Refresh page
+                location.reload();
+            }
+        });
+
+        // Lazy loading images
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.classList.remove('lazy');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+
+            document.querySelectorAll('img[data-src]').forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + K for search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+            
+            // Escape to close modals
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            }
+        });
+
+        // Analytics tracking (placeholder)
+        function trackEvent(category, action, label) {
+            console.log('Event tracked:', { category, action, label });
+            // Integrate with analytics service here
+        }
+
+        // Error handling
+        window.addEventListener('error', (e) => {
+            console.error('Error occurred:', e.error);
+            showNotification('Terjadi kesalahan. Silakan coba lagi.', 'error');
+        });
+
+        // Online/Offline detection
+        window.addEventListener('online', () => {
+            showNotification('Koneksi internet tersambung', 'success');
+        });
+
+        window.addEventListener('offline', () => {
+            showNotification('Koneksi internet terputus', 'warning');
+        });
+
+        // Performance monitoring
+        window.addEventListener('load', () => {
+            const perfData = performance.timing;
+            const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
+            console.log('Page load time:', pageLoadTime + 'ms');
+        });
+
+        // Add haptic feedback for mobile (if supported)
+        function vibrate(duration = 10) {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(duration);
+            }
+        }
+
+        // Enhanced button clicks with haptic feedback
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('button, .btn, .card')) {
+                vibrate(10);
+            }
+        });
+
+        // Prevent zoom on double tap (iOS)
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Add install prompt for PWA
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show install button
+            const installBtn = document.createElement('button');
+            installBtn.className = 'btn btn-primary';
+            installBtn.textContent = '📱 Install App';
+            installBtn.style.cssText = 'position: fixed; bottom: 100px; right: 20px; z-index: 999; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+            installBtn.onclick = async () => {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log('Install prompt outcome:', outcome);
+                deferredPrompt = null;
+                installBtn.remove();
+            };
+            document.body.appendChild(installBtn);
+        });
+
+        // Log app version
+        console.log('%c🏖️ Banten Travel v1.0.0', 'color: #2563eb; font-size: 20px; font-weight: bold;');
+        console.log('%cDibuat oleh Tangguh & Farel', 'color: #10b981; font-size: 14px;');
+        console.log('%c© 2026 Banten Travel. All rights reserved.', 'color: #64748b; font-size: 12px;');
+    </script>
+</body>
+</html>
